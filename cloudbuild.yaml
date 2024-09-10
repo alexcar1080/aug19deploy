@@ -1,5 +1,42 @@
 steps:
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'your-image-name:latest', '.']
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'your-image-name:latest']
+
+  - name: 'hashicorp/terraform:latest'
+    id: 'Install Terraform'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        terraform --version
+
+
+  - name: 'hashicorp/terraform:latest'
+    id: 'Terraform Init'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        cd 0-Bootstrap
+        terraform init
+
+
+  - name: 'hashicorp/terraform:latest'
+    id: 'Terraform Validate'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        cd 0-Bootstrap
+        terraform validate
+
+
+  - name: 'hashicorp/terraform:latest'
+    id: 'Terraform Apply'
+    entrypoint: 'sh'
+    args:
+      - '-c'
+      - |
+        cd 0-Bootstrap
+        terraform apply -auto-approve
+
+
+timeout: "1200s"
